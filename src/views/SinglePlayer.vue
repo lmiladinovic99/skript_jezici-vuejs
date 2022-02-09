@@ -1,7 +1,23 @@
 <template>
   <div>
     <b-row>
-        <h1 v-if="player">{{ player.firstName }} {{ player.lastName }} {{ player.number }}  {{ player.team.name }}</h1>
+        <div>
+          <h1 v-if="player">{{ player.firstName }} {{ player.lastName }} {{ player.number }}  {{ player.team.name }}</h1>
+        </div>
+        <div>
+          <b-button variant="outline-dark" @click="addComment">Add Comment</b-button>
+        </div>
+        <div v-if="isAdd">
+          <div>
+            <input type="text" v-model="rating" placeholder="Rating">
+          </div>
+          <div>
+            <textarea type="text" v-model="comment" placeholder="Comment"></textarea>
+          </div>
+          <div>
+            <b-button variant="outline-dark" @click="submitAdd">Submit</b-button>
+          </div>
+        </div>
     </b-row>
     <b-row v-if="comments" v-for="comment in comments">
         <ul v-if="comment && comment.player.id==player.id">
@@ -16,9 +32,20 @@
 <script>
 
   import { mapActions, mapState } from 'vuex';
+  import jwt_decode from "jwt-decode";
 
   export default {
     name: 'SinglePlayer',
+    props: {
+        rating: {
+            type: Number,
+            default: 0
+        },
+        comment: {
+            type: String,
+            default: ''
+        }
+    },
 
     components: {
 
@@ -26,7 +53,8 @@
 
     data() {
       return {
-        
+        isAdd: false,
+        userId: 0
       }
     },
 
@@ -38,12 +66,26 @@
     
     methods: {
       ...mapActions([
-        'loadPlayerById'
-      ])
+        'loadPlayerById', 'newComment'
+      ]),
+      addComment() {
+        this.isAdd = true;
+      },
+      submitAdd() {
+        const comment = JSON.stringify({userId: this.userId, player: this.player.id,
+                                       rating: this.rating, comment: this.comment});
+        //this.newComment(comment);
+
+      }
     },
 
     mounted() {
       this.loadPlayerById(this.$route.params.id);
+      if (localStorage.token !== "") {
+        this.isLogged = true;
+        var decoded = jwt_decode(localStorage.token);
+        this.userId = decoded.userId;
+      }
     }
   }
 

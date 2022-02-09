@@ -5,7 +5,10 @@ import Players from '@/views/Players.vue';
 import Teams from '@/views/Teams.vue';
 import Comments from '@/views/Comments.vue';
 import SinglePlayer from '@/views/SinglePlayer.vue';
+import SingleComment from '@/views/SingleComment.vue';
 import SingleTeam from '@/views/SingleTeam.vue';
+import Register from '@/views/Register.vue';
+import Login from '@/views/Login.vue';
 
 Vue.use(VueRouter)
 
@@ -31,6 +34,11 @@ const routes = [
     component: Teams
   },
   {
+    path: '/single_comment/:id',
+    name: 'SingleComment',
+    component: SingleComment
+  },
+  {
     path: '/single_player/:id',
     name: 'SinglePlayer',
     component: SinglePlayer
@@ -39,6 +47,16 @@ const routes = [
     path: '/single_team/:id',
     name: 'SingleTeam',
     component: SingleTeam
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
   },
 ]
 

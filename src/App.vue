@@ -7,9 +7,12 @@
         <router-link to="/players">Players</router-link> |
         <router-link to="/teams">Teams</router-link>
       </b-col>
-      <b-col id="log">
-        <b-button variant="outline-dark">Register</b-button>  
-        <b-button variant="outline-dark">Login</b-button>
+      <b-col v-if="isLogged" id="log">
+        <b-button variant="outline-dark" @click="logout" href="/">Logout</b-button>  
+      </b-col>
+      <b-col v-else id="log">
+        <b-button variant="outline-dark" href="/register">Register</b-button>  
+        <b-button variant="outline-dark" href="/login">Login</b-button>
       </b-col>
       <router-view/>
     </b-row>
@@ -22,12 +25,27 @@
     export default {
         name: "App",
         methods: {
-            ...mapActions(['loadPlayers', 'loadTeams', 'loadComments'])
+            ...mapActions(['loadPlayers', 'loadTeams', 'loadComments']),
+            logout() {
+              localStorage.token = "";
+              this.$router.go();
+            }
         },
+        data() {
+          return {
+            isLogged: false
+          }
+        },
+
         mounted: function() {
             this.loadComments();
             this.loadPlayers();
             this.loadTeams();
+
+            if (localStorage.token !== "") {
+              this.isLogged = true;
+            }
+
         }
     }
 </script>

@@ -26,20 +26,30 @@ export default new Vuex.Store({
     setPlayers: function(state, players) {
       state.players = players;
     },
-    addPlayers: function(state, players) {
-      state.players.push(players);
-    },
     setPlayer: function(state, player) {
       state.player = player
     },
     setTeams: function(state, teams) {
       state.teams = teams;
     },
-    addTeams: function(state, teams) {
-      state.teams.push(teams);
-    },
     setTeam: function(state, team) {
       state.team = team;
+    },
+    setToken(state, token) {
+      state.token = token;
+      localStorage.token = token;
+    },
+    removeToken(state) {
+      state.token = '';
+      localStorage.token = '';
+    },
+    removeComment: function (state, id) {
+      for (let u = 0; u < state.comments.length; u++) {
+        if (state.comments[u].id === id) {
+          state.comments.splice(u, 1);
+          break;
+        }
+      }
     },
   },
   actions: {
@@ -136,6 +146,73 @@ export default new Vuex.Store({
         return response.json()
       }).then((jsonData) => {
         commit('setTeam', jsonData)
+      }).catch((error) => {
+        if (typeof error.text === 'function')
+          error.text().then((errorMessage) => {
+            alert(errorMessage);
+          });
+        else
+          alert(error);
+      });
+    },
+    register({ commit }, obj) {
+      fetch('http://127.0.0.1:8081/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(obj)
+      }).then( res => res.json() )
+        .then( tkn => commit('setToken', tkn.token) );
+    },
+    login({ commit }, obj) {
+      fetch('http://127.0.0.1:8081/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(obj)
+      }).then( res => res.json() )
+        .then( tkn => {
+          if (tkn.msg) {
+           alert(tkn.msg);
+          } else {
+            commit('setToken', tkn.token)
+          }
+        });
+    },
+    deleteComments: function({ commit }, id) {
+      fetch(`http://localhost:8088/api/comments/${id}`, { 
+        method: 'delete',
+        headers: { 
+          'Authorization': `Bearer ${localStorage.token}`
+        }
+    }).then((response) => {
+        if (!response.ok)
+          throw response;
+
+        return response.json()
+      }).then((jsonData) => {
+        commit('removeComment', jsonData.id)
+      }).catch((error) => {
+        if (typeof error.text === 'function')
+          error.text().then((errorMessage) => {
+            alert(errorMessage);
+          });
+        else
+          alert(error);
+      });
+    },
+    newComment: function({ commit }, comment) {
+      fetch('http://localhost:8000/api/users', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: user
+      }).then((response) => {
+        if (!response.ok)
+          throw response;
+
+        return response.json();
+      }).then((jsonData) => {
+        commit('addComments', jsonData);
       }).catch((error) => {
         if (typeof error.text === 'function')
           error.text().then((errorMessage) => {

@@ -15,10 +15,6 @@
       CommentsList
     },
 
-    watch: {
-      
-    },
-
     mounted() {
         
     },

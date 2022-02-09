@@ -18,6 +18,7 @@
       :per-page="perPage"
       :current-page="currentPage"
       head-variant="light"
+      @row-clicked="rowClicked"
     >
     </b-table>
     <h1 v-else>No comments</h1>
@@ -65,9 +66,9 @@
         
       ]),
 
-      // rowClicked(record, index) {
-      //   this.$router.push({ name: 'Single', params: { id: record.objectID } });
-      // }
+      rowClicked(record, index) {
+        this.$router.push({ name: 'SingleComment', params: { id: record.id } });
+      }
     }
   }
 
