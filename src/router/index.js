@@ -4,6 +4,8 @@ import Home from '@/views/Home.vue';
 import Players from '@/views/Players.vue';
 import Teams from '@/views/Teams.vue';
 import Comments from '@/views/Comments.vue';
+import SinglePlayer from '@/views/SinglePlayer.vue';
+import SingleTeam from '@/views/SingleTeam.vue';
 
 Vue.use(VueRouter)
 
@@ -29,13 +31,15 @@ const routes = [
     component: Teams
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+    path: '/single_player/:id',
+    name: 'SinglePlayer',
+    component: SinglePlayer
+  },
+  {
+    path: '/single_team/:id',
+    name: 'SingleTeam',
+    component: SingleTeam
+  },
 ]
 
 const router = new VueRouter({

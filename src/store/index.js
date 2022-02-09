@@ -5,9 +5,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    comments: [], 
+    comments: [],
+    comment: null, 
     players: [], 
+    player: null,
     teams: [],
+    team: null,
     token: ''
   },
   mutations: {
@@ -17,18 +20,27 @@ export default new Vuex.Store({
     addComments: function(state, comments) {
       state.comments.push(comments);
     },
+    setComment: function(state, comment) {
+      state.comment = comment
+    },
     setPlayers: function(state, players) {
       state.players = players;
     },
     addPlayers: function(state, players) {
       state.players.push(players);
     },
+    setPlayer: function(state, player) {
+      state.player = player
+    },
     setTeams: function(state, teams) {
       state.teams = teams;
     },
     addTeams: function(state, teams) {
       state.teams.push(teams);
-    }
+    },
+    setTeam: function(state, team) {
+      state.team = team;
+    },
   },
   actions: {
     loadComments: function ({ commit }) {
@@ -73,6 +85,57 @@ export default new Vuex.Store({
         return response.json()
       }).then((jsonData) => {
         commit('setTeams', jsonData)
+      }).catch((error) => {
+        if (typeof error.text === 'function')
+          error.text().then((errorMessage) => {
+            alert(errorMessage);
+          });
+        else
+          alert(error);
+      });
+    },
+    loadCommentById: function ({ commit }, id) {
+      fetch(`http://localhost:8088/api/comments/${id}`, { method: 'get' }).then((response) => {
+        if (!response.ok)
+          throw response;
+
+        return response.json()
+      }).then((jsonData) => {
+        commit('setComment', jsonData)
+      }).catch((error) => {
+        if (typeof error.text === 'function')
+          error.text().then((errorMessage) => {
+            alert(errorMessage);
+          });
+        else
+          alert(error);
+      });
+    },
+    loadPlayerById: function ({ commit }, id) {
+      fetch(`http://localhost:8088/api/players/${id}`, { method: 'get' }).then((response) => {
+        if (!response.ok)
+          throw response;
+
+        return response.json()
+      }).then((jsonData) => {
+        commit('setPlayer', jsonData)
+      }).catch((error) => {
+        if (typeof error.text === 'function')
+          error.text().then((errorMessage) => {
+            alert(errorMessage);
+          });
+        else
+          alert(error);
+      });
+    },
+    loadTeamById: function ({ commit }, id) {
+      fetch(`http://localhost:8088/api/teams/${id}`, { method: 'get' }).then((response) => {
+        if (!response.ok)
+          throw response;
+
+        return response.json()
+      }).then((jsonData) => {
+        commit('setTeam', jsonData)
       }).catch((error) => {
         if (typeof error.text === 'function')
           error.text().then((errorMessage) => {
