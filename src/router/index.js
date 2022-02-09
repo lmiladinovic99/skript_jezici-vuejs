@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from '@/views/Home.vue';
+import Players from '@/views/Players.vue';
+import Teams from '@/views/Teams.vue';
+import Comments from '@/views/Comments.vue';
 
 Vue.use(VueRouter)
 
@@ -9,6 +12,21 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/comments',
+    name: 'Comments',
+    component: Comments
+  },
+  {
+    path: '/players',
+    name: 'Players',
+    component: Players
+  },
+  {
+    path: '/teams',
+    name: 'Teams',
+    component: Teams
   },
   {
     path: '/about',

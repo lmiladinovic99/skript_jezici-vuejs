@@ -1,12 +1,36 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <b-row>
+      <b-col id="nav">
+        <router-link to="/">Home</router-link> |
+        <router-link to="/comments">Comments</router-link> |
+        <router-link to="/players">Players</router-link> |
+        <router-link to="/teams">Teams</router-link>
+      </b-col>
+      <b-col id="log">
+        <b-button variant="outline-dark">Register</b-button>  
+        <b-button variant="outline-dark">Login</b-button>
+      </b-col>
+      <router-view/>
+    </b-row>
   </div>
 </template>
+
+<script>
+    import { mapActions } from 'vuex';
+
+    export default {
+        name: "App",
+        methods: {
+            ...mapActions(['loadPlayers', 'loadTeams', 'loadComments'])
+        },
+        mounted: function() {
+            this.loadComments();
+            this.loadPlayers();
+            this.loadTeams();
+        }
+    }
+</script>
 
 <style>
 #app {
@@ -18,6 +42,10 @@
 }
 
 #nav {
+  padding: 30px;
+}
+
+#log {
   padding: 30px;
 }
 
