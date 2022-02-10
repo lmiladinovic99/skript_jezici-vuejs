@@ -45,7 +45,7 @@
         e.preventDefault();
 
         this.login(this.form);
-        this.$router.push({ name: 'Home' });
+        this.$router.push({ name: 'Comments' });
       }
     }
   }

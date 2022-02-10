@@ -29,7 +29,7 @@
             logout() {
               localStorage.token = "";
               this.$router.push({ name: 'Home' });
-            }
+            },
         },
         data() {
           return {
@@ -45,7 +45,6 @@
             if (localStorage.token !== "") {
               this.isLogged = true;
             }
-
         }
     }
 </script>

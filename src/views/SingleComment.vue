@@ -34,6 +34,13 @@
 
   import { mapActions, mapState } from 'vuex';
   import jwt_decode from "jwt-decode";
+  import Joi from 'joi';
+
+  const sema = Joi.object().keys({
+    rating: Joi.number().min(1).max(10).required(),
+    comment: Joi.string().min(5).max(700).required()
+  });
+
 
   export default {
     name: 'SingleComment',
@@ -79,12 +86,20 @@
         this.isEdit = true;
       },
       submitEdit() {
-        this.deleteComments(this.$route.params.id);
+        let { error } = sema.validate({rating: this.rating, comment: this.commentt});
         //this.$router.push({ name: 'Home' });
         const comment = JSON.stringify({userId: this.userId, playerId: this.comment.playerId,
                                        rating: this.rating, comment: this.commentt});
-        this.newComment(comment);
-        this.$router.push({ name: 'Comments' });
+
+        if (error) {
+          alert(error);
+        }
+        else {
+          this.deleteComments(this.$route.params.id);
+          this.newComment(comment);
+          this.$router.push({ name: 'Comments' });
+          location.reload();
+        }
       }
     },
 
