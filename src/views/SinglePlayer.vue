@@ -9,10 +9,10 @@
         </div>
         <div v-if="isAdd">
           <div>
-            <input type="text" v-model="rating" placeholder="Rating">
+            <input type="text" v-model="rating" placeholder="Rating" required>
           </div>
           <div>
-            <textarea type="text" v-model="comment" placeholder="Comment"></textarea>
+            <textarea type="text" v-model="comment" placeholder="Comment" required></textarea>
           </div>
           <div>
             <b-button variant="outline-dark" @click="submitAdd">Submit</b-button>
@@ -33,6 +33,12 @@
 
   import { mapActions, mapState } from 'vuex';
   import jwt_decode from "jwt-decode";
+  import Joi from 'joi';
+
+  const sema = Joi.object().keys({
+    rating: Joi.number().min(1).max(10).required(),
+    comment: Joi.string().min(5).max(700).required()
+  });
 
   export default {
     name: 'SinglePlayer',
@@ -72,10 +78,16 @@
         this.isAdd = true;
       },
       submitAdd() {
-        const comment = JSON.stringify({userId: this.userId, player: this.player.id,
+        let { error } = sema.validate({rating: this.rating, comment: this.comment});
+        const comment = JSON.stringify({userId: this.userId, playerId: this.player.id,
                                        rating: this.rating, comment: this.comment});
-        //this.newComment(comment);
-
+        if (error) {
+          alert(error);
+        }
+        else{
+          this.newComment(comment);
+          this.$router.go();
+        }
       }
     },
 

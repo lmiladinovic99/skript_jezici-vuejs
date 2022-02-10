@@ -51,6 +51,15 @@ export default new Vuex.Store({
         }
       }
     },
+    updateComment: function (state, payload) {
+      for (let u = 0; u < state.comments.length; u++) {
+        if (state.comments[u].id === payload.id) {
+          state.comments[u].rating = payload.rating;
+          state.comments[u].comment = payload.comment;
+          break;
+        }
+      }
+    },
   },
   actions: {
     loadComments: function ({ commit }) {
@@ -156,7 +165,7 @@ export default new Vuex.Store({
       });
     },
     register({ commit }, obj) {
-      fetch('http://127.0.0.1:8081/register', {
+      fetch('http://localhost:8081/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(obj)
@@ -164,7 +173,7 @@ export default new Vuex.Store({
         .then( tkn => commit('setToken', tkn.token) );
     },
     login({ commit }, obj) {
-      fetch('http://127.0.0.1:8081/login', {
+      fetch('http://localhost:8081/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(obj)
@@ -200,12 +209,13 @@ export default new Vuex.Store({
       });
     },
     newComment: function({ commit }, comment) {
-      fetch('http://localhost:8000/api/users', {
+      fetch('http://localhost:8088/api/comments', {
         method: 'post',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.token}`
         },
-        body: user
+        body: comment
       }).then((response) => {
         if (!response.ok)
           throw response;
@@ -213,6 +223,30 @@ export default new Vuex.Store({
         return response.json();
       }).then((jsonData) => {
         commit('addComments', jsonData);
+      }).catch((error) => {
+        if (typeof error.text === 'function')
+          error.text().then((errorMessage) => {
+            alert(errorMessage);
+          });
+        else
+          alert(error);
+      });
+    },
+    changeComment: function({ commit }, comment) {
+      fetch(`http://localhost:8088/api/comments/${comment.id}`, {
+        method: 'put',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.token}`
+        },
+        body: comment
+      }).then((response) => {
+        if (!response.ok)
+          throw response;
+
+        return response.json();
+      }).then((jsonData) => {
+        commit('updateComment', jsonData);
       }).catch((error) => {
         if (typeof error.text === 'function')
           error.text().then((errorMessage) => {

@@ -46,7 +46,6 @@
 
         this.login(this.form);
         this.$router.push({ name: 'Home' });
-        this.$router.go();
       }
     }
   }

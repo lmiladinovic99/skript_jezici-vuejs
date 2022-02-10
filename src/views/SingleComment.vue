@@ -16,10 +16,10 @@
         </div>
         <div v-if="isEdit">
           <div>
-            <input type="text" v-model="rating" placeholder="Rating">
+            <input type="text" v-model="rating" placeholder="Rating" required>
           </div>
           <div>
-            <textarea type="text" v-model="comment" placeholder="Comment"></textarea>
+            <textarea type="text" v-model="commentt" placeholder="Comment" required></textarea>
           </div>
           <div>
             <b-button variant="outline-dark" @click="submitEdit">Submit</b-button>
@@ -37,6 +37,17 @@
 
   export default {
     name: 'SingleComment',
+
+    props: {
+        rating: {
+            type: Number,
+            default: 0
+        },
+        commentt: {
+            type: String,
+            default: ''
+        }
+    },
 
     components: {
 
@@ -58,17 +69,22 @@
     
     methods: {
       ...mapActions([
-        'loadCommentById', 'deleteComments'
+        'loadCommentById', 'deleteComments', 'changeComment', 'newComment'
       ]),
       deleteCom() {
         this.deleteComments(this.$route.params.id);
-        this.$router.push({ name: 'Home' });
+        this.$router.push({ name: 'Comments' });
       },
       editCom() {
         this.isEdit = true;
       },
       submitEdit() {
-        
+        this.deleteComments(this.$route.params.id);
+        //this.$router.push({ name: 'Home' });
+        const comment = JSON.stringify({userId: this.userId, playerId: this.comment.playerId,
+                                       rating: this.rating, comment: this.commentt});
+        this.newComment(comment);
+        this.$router.push({ name: 'Comments' });
       }
     },
 

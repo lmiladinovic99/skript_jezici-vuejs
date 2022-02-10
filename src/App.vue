@@ -28,7 +28,7 @@
             ...mapActions(['loadPlayers', 'loadTeams', 'loadComments']),
             logout() {
               localStorage.token = "";
-              this.$router.go();
+              this.$router.push({ name: 'Home' });
             }
         },
         data() {
